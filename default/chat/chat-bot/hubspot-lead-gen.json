@@ -1,0 +1,73 @@
+{
+  "$schema": "https://schema.yext.com/config/chat/chat-bot/v1",
+  "$id": "hubspot-lead-gen",
+  "name": "Hubspot Lead Generation Bot",
+  "initialMessage": "Hi! This is Hubspot Lead Gen. How can I help you?",
+  "goals": {
+    "CHIT_CHAT": {
+      "examples": [
+        "How are you doing?",
+        "What\u0027s going on?",
+        "What\u0027s your name?",
+        "Thank you!",
+        "Great"
+      ],
+      "goal": "Engage in a casual conversation with the user. If the user\u0027s message does not align with any other goals, this goal should be used.",
+      "instructions": [
+        {
+          "reply": {
+            "instruction": "Reply casually to the user, engaging in cordial conversation.",
+            "mode": "CONVERSATIONAL"
+          }
+        }
+      ]
+    },
+    "GENERATE_LEAD": {
+      "examples": [
+        "I\u0027d like a demo",
+        "I\u0027d like to learn more",
+        "Can I schedule a demo"
+      ],
+      "goal": "Generate Lead",
+      "instructions": [
+        {
+          "collect": {
+            "fields": [
+              {
+                "description": "Email of the lead",
+                "id": "email"
+              },
+              {
+                "description": "Name of the lead",
+                "id": "name"
+              }
+            ],
+            "instruction": "Collect the user\u0027s name and email address."
+          }
+        },
+        {
+          "restApi": {
+            "additionalHeaders": {
+              "Authorization": "Bearer ${{hubspotAccessToken}}",
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "properties": {
+                "email": "[[collectedData.email]]",
+                "firstname": "[[collectedData.name]]"
+              }
+            },
+            "method": "POST",
+            "url": "https://api.hubapi.com/crm/v3/objects/contacts"
+          }
+        },
+        {
+          "reply": {
+            "instruction": "Thank the user and let them know that a representative will reach out to them shortly with more information.",
+            "mode": "CONVERSATIONAL"
+          }
+        }
+      ]
+    }
+  }
+}
