@@ -35,10 +35,12 @@
             "fields": [
               {
                 "description": "Email of the lead",
+                "type": "STRING",
                 "id": "email"
               },
               {
                 "description": "Name of the lead",
+                "type": "STRING",
                 "id": "name"
               }
             ],
